@@ -23,3 +23,55 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('preencherCadastro', (nome, sobrenome, email, telefone, senha) => {
+    cy.get('#signup-firstname').type(nome)
+    cy.get('#signup-lastname').type(sobrenome)
+    cy.get('#signup-email').type(email)
+    cy.get('#signup-phone').type(telefone)
+    cy.get('#signup-password').type(senha)
+    cy.get('#signup-button').click()
+ })
+
+ Cypress.Commands.add('preencherNomeBranco', (sobrenome, email, telefone, senha) => {
+    cy.get('#signup-lastname').type(sobrenome)
+    cy.get('#signup-email').type(email)
+    cy.get('#signup-phone').type(telefone)
+    cy.get('#signup-password').type(senha)
+    cy.get('#signup-button').click()
+ })
+
+ Cypress.Commands.add('preencherSobrenomeBranco', (nome, email, telefone, senha) => {
+    cy.get('#signup-firstname').type(nome)
+    cy.get('#signup-email').type(email)
+    cy.get('#signup-phone').type(telefone)
+    cy.get('#signup-password').type(senha)
+    cy.get('#signup-button').click()
+ })
+
+ Cypress.Commands.add('preencherEmailBranco', (nome, sobrenome, telefone, senha) => {
+    cy.get('#signup-firstname').type(nome)
+    cy.get('#signup-lastname').type(sobrenome)
+    cy.get('#signup-phone').type(telefone)
+    cy.get('#signup-password').type(senha)
+    cy.get('#signup-button').click()
+ })
+
+ Cypress.Commands.add('preencherTelefoneBranco', (nome, sobrenome, email, senha) => {
+    cy.get('#signup-firstname').type(nome)
+    cy.get('#signup-lastname').type(sobrenome)
+    cy.get('#signup-email').type(email)
+    cy.get('#signup-password').type(senha)
+    cy.get('#signup-button').click()
+ })
+
+ Cypress.Commands.add('preencherSenhaBranco', (nome, sobrenome, email, telefone) => {
+    cy.get('#signup-firstname').type(nome)
+    cy.get('#signup-lastname').type(sobrenome)
+    cy.get('#signup-email').type(email)
+    cy.get('#signup-phone').type(telefone)
+    cy.get('#signup-button').click()
+ })
+
+
+   

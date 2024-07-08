@@ -1,152 +1,67 @@
 /// <reference types="cypress"/> 
 
+const { date } = require("joi");
+
 
 describe('US-012- Funcionalidade: Cadastro de membros', () => {
+  beforeEach(() => {
+    cy.visit('/')
+  });
+
+  var email = `bembi${Date.now()}@teste.com`
+
   it('Deve fazer cadastro de campos obrigatórios', () => {
-    cy.visit('http://127.0.0.1:8080/')
-    cy.get('#signup-firstname').type('Bembi')
-    cy.get('#signup-lastname').type('Vieira')
-    cy.get('#signup-email').type('bembi121@email.com')
-    cy.get('#signup-phone').type('983256359')
-    cy.get('#signup-password').type('Teste@1234')
-    cy.get('#signup-button').click()
-    cy.contains('#signup-response','Cadastro realizado com sucesso!').should('be.visible')
+    cy.preencherCadastro('Bembi', 'Vieira', email, '16995263478', 'Teste123@')
+    cy.get('#signup-response').should('contain', 'Cadastro realizado com sucesso!')
+    })
 
-
-  })
-})
-
-describe('US-012- Funcionalidade: Cadastro com nome em branco', () => {
   it('Não deve fazer cadastro com campo nome em branco', () => {
-    cy.visit('http://127.0.0.1:8080/')
-    cy.get('#signup-lastname').type('Vieira')
-    cy.get('#signup-email').type('bembi897@email.com')
-    cy.get('#signup-phone').type('983256359')
-    cy.get('#signup-password').type('Teste@1234')
-    cy.get('#signup-button').click()
-    cy.contains('#signup-response','{"message":"Nome não pode estar vazio"}').should('be.visible')
-
+    cy.preencherNomeBranco('Vieira', email, '16995263478', 'Teste123@')
+    cy.get('#signup-response').should('contain', '{"message":"Nome não pode estar vazio"}')
   })
-})
 
-describe('US-012- Funcionalidade: Cadastro de membros com sobrenome em branco', () => {
   it('Não deve fazer cadastro com campo sobrenome em branco', () => {
-    cy.visit('http://127.0.0.1:8080/')
-    cy.get('#signup-firstname').type('Bembi')
-    cy.get('#signup-email').type('bembi@email.com')
-    cy.get('#signup-phone').type('983256359')
-    cy.get('#signup-password').type('Teste@1234')
-    cy.get('#signup-button').click()
-    cy.contains('#signup-response','{"message":"Sobrenome não pode estar vazio"}').should('be.visible')
-
+    cy.preencherSobrenomeBranco('Bembi', email, '16995263478', 'Teste123@')
+    cy.get('#signup-response').should('contain', '{"message":"Sobrenome não pode estar vazio"}')
   })
-})
 
-describe('US-012- Funcionalidade: Cadastro de membros com email em branco', () => {
   it('Não deve fazer cadastro com campo email em branco', () => {
-    cy.visit('http://127.0.0.1:8080/')
-    cy.get('#signup-firstname').type('Bembi')
-    cy.get('#signup-lastname').type('Vieira')
-    cy.get('#signup-phone').type('983256359')
-    cy.get('#signup-password').type('Teste@1234')
-    cy.get('#signup-button').click()
-    cy.contains('#signup-response','{"message":"E-mail não pode estar vazio"}').should('be.visible')
-
+    cy.preencherEmailBranco('Bembi', 'Vieira', '16995263478', 'Teste123@')
+    cy.get('#signup-response').should('contain', '{"message":"E-mail não pode estar vazio"}')
   })
-})
-
-describe('US-012- Funcionalidade: Cadastro de membros com telefone em branco', () => {
+    
   it('Deve fazer cadastro com campo telefone em branco', () => {
-    cy.visit('http://127.0.0.1:8080/')
-    cy.get('#signup-firstname').type('Bembi')
-    cy.get('#signup-lastname').type('Vieira')
-    cy.get('#signup-email').type('bembi@email.com')
-    cy.get('#signup-password').type('Teste@1234')
-    cy.get('#signup-button').click()
-    cy.contains('#signup-response','Cadastro realizado com sucesso!').should('be.visible')
-
+    cy.preencherTelefoneBranco('Bembi', 'Vieira', email, 'Teste123@')
+    cy.get('#signup-response').should('contain', 'Cadastro realizado com sucesso!')
   })
-})
 
-describe('US-012- Funcionalidade: Cadastro de membros com senha em branco', () => {
   it('Não deve fazer cadastro com campo senha em branco', () => {
-    cy.visit('http://127.0.0.1:8080/')
-    cy.get('#signup-firstname').type('Bembi')
-    cy.get('#signup-lastname').type('Vieira')
-    cy.get('#signup-email').type('bembi@email.com')
-    cy.get('#signup-phone').type('983256359')
-    cy.get('#signup-button').click()
-    cy.contains('#signup-response','{"message":"Senha não pode estar vazia"}').should('be.visible')
-
+    cy.preencherSenhaBranco('Bembi', 'Vieira', email, '16995263478')
+    cy.get('#signup-response').should('contain', '{"message":"Senha não pode estar vazia"}')
   })
-})
 
-describe('US-012- Funcionalidade: Cadastro de membros com senha fraca', () => {
-  it('Não deve fazer cadastro com utilização de senha fraca', () => {
-    cy.visit('http://127.0.0.1:8080/')
-    cy.get('#signup-firstname').type('Bembi')
-    cy.get('#signup-lastname').type('Vieira')
-    cy.get('#signup-email').type('bembi@email.com')
-    cy.get('#signup-phone').type('983256359')
-    cy.get('#signup-password').type('12345678')
-    cy.get('#signup-button').click()
-    cy.contains('#signup-response','{"message":"Senha deve ter pelo menos 8 caracteres, incluir uma letra maiúscula, um número e um caractere especial (!@#$&*)"}').should('be.visible')
-
+  it('Deve fazer cadastro de campos obrigatórios', () => {
+    cy.preencherCadastro('Bembi', 'Vieira', email, '16995263478', 'teste123')
+    cy.get('#signup-response').should('contain', '{"message":"Senha deve ter pelo menos 8 caracteres, incluir uma letra maiúscula, um número e um caractere especial (!@#$&*)"}')
   })
-})
 
-describe('US-012- Funcionalidade: Cadastro de membros com senha com menos de 8 caracteres', () => {
   it('Não deve fazer cadastro com senha com menos de 8 caracteres', () => {
-    cy.visit('http://127.0.0.1:8080/')
-    cy.get('#signup-firstname').type('Bembi')
-    cy.get('#signup-lastname').type('Vieira')
-    cy.get('#signup-email').type('bembi@email.com')
-    cy.get('#signup-phone').type('983256359')
-    cy.get('#signup-password').type('12A!')
-    cy.get('#signup-button').click()
-    cy.contains('#signup-response','{"message":"Senha deve ter pelo menos 8 caracteres, incluir uma letra maiúscula, um número e um caractere especial (!@#$&*)"}').should('be.visible')
-
+    cy.preencherCadastro('Bembi', 'Vieira', email, '16995263478', '12A!')
+    cy.get('#signup-response').should('contain', '{"message":"Senha deve ter pelo menos 8 caracteres, incluir uma letra maiúscula, um número e um caractere especial (!@#$&*)"}')
   })
-})
 
-describe('US-012- Funcionalidade: Cadastro de membros com formato incorreto de email', () => {
   it('Não deve fazer cadastro com email no formato incorreto', () => {
-    cy.visit('http://127.0.0.1:8080/')
-    cy.get('#signup-firstname').type('Bembi')
-    cy.get('#signup-lastname').type('Vieira')
-    cy.get('#signup-email').type('bembi@bembi')
-    cy.get('#signup-phone').type('983256359')
-    cy.get('#signup-password').type('Teste@1234')
-    cy.get('#signup-button').click()
-    cy.contains('#signup-response','{"message":"E-mail deve ser um email válido"}').should('be.visible')
-
+    cy.preencherCadastro('Bembi', 'Vieira', 'bembi@bembi', '16995263478', 'Teste@1234')
+    cy.get('#signup-response').should('contain', '{"message":"E-mail deve ser um email válido"}')
   })
-})
 
-describe('US-012- Funcionalidade: Cadastro de membros com nome em formato inválido', () => {
   it('Não deve fazer cadastro com nome no formato incorreto', () => {
-    cy.visit('http://127.0.0.1:8080/')
-    cy.get('#signup-firstname').type('Bembi8')
-    cy.get('#signup-lastname').type('Vieira')
-    cy.get('#signup-email').type('bembi@bembi.com')
-    cy.get('#signup-phone').type('983256359')
-    cy.get('#signup-password').type('Teste@1234')
-    cy.get('#signup-button').click()
-    cy.contains('#signup-response','{"message":"Nome deve conter apenas caracteres alfabéticos, acentuados e espaços"}').should('be.visible')
-
+    cy.preencherCadastro('Bembi8', 'Vieira', email, '16995263478', 'Teste123@')
+    cy.get('#signup-response').should('contain', '{"message":"Nome deve conter apenas caracteres alfabéticos, acentuados e espaços"}')
   })
-})
 
-describe('US-012- Funcionalidade: Cadastro de membros com sobrenome em formato inválido', () => {
   it('Não deve fazer cadastro com sobrenome no formato incorreto', () => {
-    cy.visit('http://127.0.0.1:8080/')
-    cy.get('#signup-firstname').type('Bembi')
-    cy.get('#signup-lastname').type('Vieira8')
-    cy.get('#signup-email').type('bembi@bembi.com')
-    cy.get('#signup-phone').type('983256359')
-    cy.get('#signup-password').type('Teste@1234')
-    cy.get('#signup-button').click()
-    cy.contains('#signup-response','{"message":"Sobrenome deve conter apenas caracteres alfabéticos, acentuados e espaços"}').should('be.visible')
-
+    cy.preencherCadastro('Bembi', 'Vieira8', email, '16995263478', 'Teste123@')
+    cy.get('#signup-response').should('contain', '{"message":"Sobrenome deve conter apenas caracteres alfabéticos, acentuados e espaços"}')
   })
 })
