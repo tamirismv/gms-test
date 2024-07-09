@@ -11,6 +11,7 @@ describe('US-012- Funcionalidade: Cadastro de membros', () => {
   });
 
   var email = `bembi${Date.now()}@teste.com`
+  var emailtel = `teste${Date.now()}@teste.com`
 
   it('Deve fazer cadastro de campos obrigatórios', () => {
     cy.preencherCadastro('Bembi', 'Vieira', email, '16995263478', 'Teste123@')
@@ -33,7 +34,7 @@ describe('US-012- Funcionalidade: Cadastro de membros', () => {
   })
     
   it('Deve fazer cadastro com campo telefone em branco', () => {
-    cy.preencherTelefoneBranco('Bembi', 'Vieira', email, 'Teste123@')
+    cy.preencherTelefoneBranco('Bembi', 'Vieira', emailtel, 'Teste123@')
     cy.get('#signup-response').should('contain', 'Cadastro realizado com sucesso!')
   })
 
@@ -44,7 +45,7 @@ describe('US-012- Funcionalidade: Cadastro de membros', () => {
 
   it('Deve fazer cadastro de campos obrigatórios', () => {
     cy.preencherCadastro('Bembi', 'Vieira', email, '16995263478', 'teste123')
-    cy.get('#signup-response').should('contain', '{Senha deve ter pelo menos 8 caracteres, incluir uma letra maiúscula, um número e um caractere especial (!@#$&*)')
+    cy.get('#signup-response').should('contain', '{"message":"Senha deve ter pelo menos 8 caracteres, incluir uma letra maiúscula, um número e um caractere especial (!@#$&*)"}')
   })
 
   it('Não deve fazer cadastro com senha com menos de 8 caracteres', () => {
