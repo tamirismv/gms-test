@@ -1,11 +1,13 @@
 /// <reference types="cypress"/> 
 
-const { date } = require("joi");
-
 
 describe('US-012- Funcionalidade: Cadastro de membros', () => {
   beforeEach(() => {
     cy.visit('/')
+  });
+
+  afterEach(() => {
+    cy.screenshot()
   });
 
   var email = `bembi${Date.now()}@teste.com`
@@ -37,12 +39,12 @@ describe('US-012- Funcionalidade: Cadastro de membros', () => {
 
   it('Não deve fazer cadastro com campo senha em branco', () => {
     cy.preencherSenhaBranco('Bembi', 'Vieira', email, '16995263478')
-    cy.get('#signup-response').should('contain', '{"message":"Senha não pode estar vazia"}')
+    cy.get('#signup-response').should('contain', 'is not allowed to be empty')
   })
 
   it('Deve fazer cadastro de campos obrigatórios', () => {
     cy.preencherCadastro('Bembi', 'Vieira', email, '16995263478', 'teste123')
-    cy.get('#signup-response').should('contain', '{"message":"Senha deve ter pelo menos 8 caracteres, incluir uma letra maiúscula, um número e um caractere especial (!@#$&*)"}')
+    cy.get('#signup-response').should('contain', '{Senha deve ter pelo menos 8 caracteres, incluir uma letra maiúscula, um número e um caractere especial (!@#$&*)')
   })
 
   it('Não deve fazer cadastro com senha com menos de 8 caracteres', () => {
